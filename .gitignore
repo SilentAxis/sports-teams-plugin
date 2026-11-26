@@ -1,0 +1,14 @@
+# Release artifacts
+dist/
+*.zip
+*.tar.gz
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+*.log

@@ -1,0 +1,188 @@
+{
+    "id": "sports-teams",
+    "name": "Sports Teams",
+    "version": "1.0.0",
+    "api_version": "1.0.0",
+    "repository": "SilentAxis/sports-teams-plugin",
+    "description": "Official team logos and a per-team game-schedule guide for team channels (NHL, NBA, WNBA, MLB, NFL, MLS), built from ESPN's public team and schedule data.",
+    "entrypoint": "Plugin.php",
+    "class": "AppLocalPlugins\\SportsTeams\\Plugin",
+    "capabilities": [
+        "channel_processor",
+        "scheduled"
+    ],
+    "hooks": [
+        "playlist.synced"
+    ],
+    "permissions": [
+        "db_read",
+        "db_write",
+        "network_egress",
+        "filesystem_read",
+        "filesystem_write",
+        "queue_jobs",
+        "hook_subscriptions",
+        "scheduled_runs"
+    ],
+    "schema": {
+        "tables": []
+    },
+    "data_ownership": {
+        "tables": [],
+        "directories": [
+            "plugin-data/sports-teams"
+        ],
+        "files": [],
+        "default_cleanup_policy": "preserve"
+    },
+    "settings": [
+        {
+            "type": "section",
+            "label": "Playlists & Leagues",
+            "collapsible": true,
+            "collapsed": false,
+            "fields": [
+                {
+                    "id": "playlist_ids",
+                    "label": "Playlists",
+                    "type": "model_select",
+                    "model": "App\\Models\\Playlist",
+                    "label_attribute": "name",
+                    "scope": "owned",
+                    "multiple": true,
+                    "default": null,
+                    "helper_text": "Provider playlists whose team channels get logos and guide data. Runs automatically after each sync of these playlists. Custom playlists built from them inherit the result."
+                },
+                {
+                    "id": "leagues",
+                    "label": "Leagues",
+                    "type": "select",
+                    "multiple": true,
+                    "default": [
+                        "nhl",
+                        "nba",
+                        "wnba",
+                        "mlb"
+                    ],
+                    "options": {
+                        "nhl": "NHL",
+                        "nba": "NBA",
+                        "wnba": "WNBA",
+                        "mlb": "MLB",
+                        "nfl": "NFL",
+                        "mls": "MLS"
+                    }
+                },
+                {
+                    "id": "group_filter",
+                    "label": "Only channels whose group contains",
+                    "type": "text",
+                    "default": "TEAM",
+                    "helper_text": "Case-insensitive. Keeps the plugin to team channels (for example 'US| NHL TEAM PPV'). Leave empty to check every enabled live channel. Game and event channels ('A vs B', '@', dates, replays) are always skipped."
+                }
+            ]
+        },
+        {
+            "type": "section",
+            "label": "Logos",
+            "collapsible": true,
+            "collapsed": false,
+            "fields": [
+                {
+                    "id": "set_logos",
+                    "label": "Set official team logos",
+                    "type": "boolean",
+                    "default": true
+                },
+                {
+                    "id": "logo_variant",
+                    "label": "Logo variant",
+                    "type": "select",
+                    "default": "dark",
+                    "options": {
+                        "dark": "For dark backgrounds (recommended for TV apps)",
+                        "default": "Standard"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "section",
+            "label": "Guide",
+            "collapsible": true,
+            "collapsed": false,
+            "fields": [
+                {
+                    "id": "build_guide",
+                    "label": "Build the team schedule guide",
+                    "type": "boolean",
+                    "default": true,
+                    "helper_text": "Writes a guide with each team's upcoming games and 'Next game' filler, registers it as the EPG source named below and maps team channels to it."
+                },
+                {
+                    "id": "epg_name",
+                    "label": "Guide source name",
+                    "type": "text",
+                    "default": "Team Schedules (ESPN)"
+                },
+                {
+                    "id": "guide_days",
+                    "label": "Days of schedule to include",
+                    "type": "number",
+                    "default": 14
+                },
+                {
+                    "id": "timezone",
+                    "label": "Time zone for 'Next game' times",
+                    "type": "text",
+                    "default": "America/Toronto",
+                    "helper_text": "PHP time zone name, e.g. America/Toronto, America/New_York, America/Vancouver."
+                }
+            ]
+        },
+        {
+            "type": "section",
+            "label": "Schedule",
+            "collapsible": true,
+            "collapsed": true,
+            "fields": [
+                {
+                    "id": "schedule_enabled",
+                    "label": "Refresh on a schedule",
+                    "type": "boolean",
+                    "default": true,
+                    "helper_text": "Keeps the guide current even on days the playlist doesn't sync."
+                },
+                {
+                    "id": "schedule_cron",
+                    "label": "Schedule (cron)",
+                    "type": "text",
+                    "default": "30 4 * * *"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "id": "health_check",
+            "label": "Health Check",
+            "dry_run": true,
+            "fields": []
+        },
+        {
+            "id": "apply",
+            "label": "Update Team Logos & Guide",
+            "dry_run": true,
+            "fields": [
+                {
+                    "id": "playlist_id",
+                    "label": "Playlist (leave empty for the configured playlists)",
+                    "type": "model_select",
+                    "model": "App\\Models\\Playlist",
+                    "label_attribute": "name",
+                    "scope": "owned"
+                }
+            ]
+        }
+    ]
+}
