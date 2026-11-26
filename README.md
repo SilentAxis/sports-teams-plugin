@@ -1,8 +1,16 @@
 # Sports Teams (m3u-editor plugin)
 
 Gives team channels (for example `US: TORONTO MAPLE LEAFS` or `NBA: TORONTO RAPTORS ᴴᴰ`) their
-official logo and a guide showing each team's upcoming games, using ESPN's public team and
-schedule data. Supports NHL, NBA, WNBA, MLB, NFL and MLS.
+official logo and a guide showing each team's upcoming games.
+
+| Source | Leagues |
+|---|---|
+| ESPN (public, no key) | NHL, NBA, WNBA, MLB, NFL, MLS, NCAA men's and women's hockey |
+| [TheSportsDB](https://www.thesportsdb.com) | AHL, ECHL, WHL, OHL, QMJHL (CHL = all three), KHL, SHL, Liiga, DEL, National League (Switzerland), ICE Hockey League (Austria), EIHL |
+
+TheSportsDB works without a key using its free test key, but that key returns at most 10 teams
+and only a few games per league. For complete rosters and schedules, enter a personal API key
+(part of TheSportsDB's paid membership) in the plugin settings.
 
 ## What it does
 
@@ -17,7 +25,12 @@ schedule data. Supports NHL, NBA, WNBA, MLB, NFL and MLS.
 3. **Matching:** strips provider prefixes (`US:`, `NBA:`, `CA EN:`…), quality tags (`HD`, `ᴴᴰ`,
    `ᴿᴬᵂ`…) and bracketed text, then matches the full team name. Game and event channels (`A vs B`,
    `@`, dates, replays, RedZone, League Pass) are skipped. Renamed teams are handled, for
-   example Arizona Coyotes → Utah Mammoth and Los Angeles Clippers → LA Clippers.
+   example Arizona Coyotes → Utah Mammoth and Los Angeles Clippers → LA Clippers. Accents are
+   ignored, so `Karpat` matches `Kärpät`.
+4. **League guide channels:** for each TheSportsDB league the guide also contains a
+   `<League> – all games` channel (id `league.<key>`, for example `league.liiga`) listing every
+   game. It isn't mapped automatically. Map it by hand to league or event channels such as
+   `FI: MTV LIIGA 1` if you want their guide to show the day's games.
 
 ## When it runs
 
@@ -31,7 +44,8 @@ schedule data. Supports NHL, NBA, WNBA, MLB, NFL and MLS.
 | Setting | Default | Notes |
 |---|---|---|
 | Playlists | – | Provider playlists to process. Custom playlists built from them inherit the result. |
-| Leagues | NHL, NBA, WNBA, MLB | Add NFL or MLS if you have team channels for them. |
+| Leagues | NHL, NBA, WNBA, MLB | Also NFL, MLS, NCAA hockey and the hockey leagues listed above. `CHL` selects WHL, OHL and QMJHL; `NCAA Hockey` selects men's and women's. |
+| TheSportsDB API key | – | Optional; see above. |
 | Only channels whose group contains | `TEAM` | Empty = every enabled live channel. |
 | Set official team logos / Logo variant | on / dark | |
 | Build the team schedule guide | on | |
@@ -75,9 +89,11 @@ After installing, enable the plugin, pick your playlist(s) in its settings, and 
 
 - ESPN's site API is public and unauthenticated, but undocumented, so its format may change.
   Failures are logged per league and don't stop the other leagues.
+- TheSportsDB requests are spaced about 0.7 s apart to stay within its rate limit, so a run
+  with every hockey league enabled takes a few minutes.
 - The plugin never changes channels outside the selected playlists.
 - Team names and logos are trademarks of their respective leagues and teams. Logos are
-  referenced from ESPN's CDN, not redistributed.
+  referenced from ESPN's and TheSportsDB's CDNs, not redistributed.
 
 ## License
 

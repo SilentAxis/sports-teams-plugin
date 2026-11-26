@@ -1,10 +1,10 @@
 {
     "id": "sports-teams",
     "name": "Sports Teams",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "api_version": "1.0.0",
     "repository": "SilentAxis/sports-teams-plugin",
-    "description": "Official team logos and a per-team game-schedule guide for team channels (NHL, NBA, WNBA, MLB, NFL, MLS), built from ESPN's public team and schedule data.",
+    "description": "Official team logos and a per-team game-schedule guide for team channels: NHL, NBA, WNBA, MLB, NFL, MLS and NCAA hockey (ESPN), plus AHL, ECHL, CHL (WHL/OHL/QMJHL), KHL, SHL, Liiga, DEL, National League, ICE Hockey League and EIHL (TheSportsDB).",
     "entrypoint": "Plugin.php",
     "class": "AppLocalPlugins\\SportsTeams\\Plugin",
     "capabilities": [
@@ -70,8 +70,32 @@
                         "wnba": "WNBA",
                         "mlb": "MLB",
                         "nfl": "NFL",
-                        "mls": "MLS"
-                    }
+                        "mls": "MLS",
+                        "ncaa": "NCAA Hockey (men's + women's)",
+                        "ncaam": "NCAA Men's Hockey",
+                        "ncaaw": "NCAA Women's Hockey",
+                        "ahl": "AHL",
+                        "echl": "ECHL",
+                        "chl": "CHL (WHL + OHL + QMJHL)",
+                        "whl": "WHL",
+                        "ohl": "OHL",
+                        "qmjhl": "QMJHL",
+                        "khl": "KHL",
+                        "shl": "SHL (Sweden)",
+                        "liiga": "Liiga (Finland)",
+                        "del": "DEL (Germany)",
+                        "nl": "National League (Switzerland)",
+                        "icehl": "ICE Hockey League (Austria)",
+                        "eihl": "EIHL (UK)"
+                    },
+                    "helper_text": "NHL, NBA, WNBA, MLB, NFL, MLS and NCAA hockey use ESPN. The other hockey leagues use TheSportsDB; add an API key below for complete rosters and schedules."
+                },
+                {
+                    "id": "thesportsdb_api_key",
+                    "label": "TheSportsDB API key",
+                    "type": "text",
+                    "default": "",
+                    "helper_text": "Used for AHL, ECHL, CHL, KHL, SHL, Liiga, DEL, National League, ICE Hockey League and EIHL. Leave empty to use TheSportsDB's free test key, which returns at most 10 teams and only a few games per league. A personal key comes with TheSportsDB's paid membership (thesportsdb.com)."
                 },
                 {
                     "id": "group_filter",
